@@ -46,6 +46,21 @@ namespace CyberMall.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            /*
+            [Required]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
+            [Display(Name = "TEMPLATE")]
+            public string TEMPLATE { get; set; }
+            */
+
+            [Required]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -61,6 +76,30 @@ namespace CyberMall.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [Display(Name = "Address Line 1")]
+            public string AddressLine1 { get; set; }
+
+            [Display(Name = "Address Line 2")]
+            public string AddressLine2 { get; set; }
+
+            [Required]
+            [Display(Name = "City")]
+            public string City { get; set; }
+
+            [Display(Name = "Region")]
+            public string Region { get; set; }
+
+            [Required]
+            [Display(Name = "Country")]
+            public string Country { get; set; }
+
+            [Required]
+            [Display(Name = "Postal Code")]
+            public string ZipCode { get; set; }
+
+
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -75,7 +114,18 @@ namespace CyberMall.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    AddressLine1 = Input.AddressLine1,
+                    AddressLine2 = Input.AddressLine2,
+                    City = Input.City,
+                    Region = Input.Region,
+                    ZipCode = Input.ZipCode,
+                    Country = Input.Country
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
