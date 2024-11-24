@@ -13,5 +13,7 @@ namespace CyberMall.Data
             : base(options)
         {
         }
+
+        public DbSet<Item> Items { get; set; }
     }
 }
