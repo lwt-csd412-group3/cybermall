@@ -1,8 +1,70 @@
-﻿@{
+﻿@model IEnumerable<CyberMall.Models.Item>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Cybermall</h1>
+    <h2>Great products at the lowest price!</h2>
 </div>
+
+<h3>Available Listings</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Product name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Picture
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Amount of products available
+            </th>
+            <th>Actions</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @if (item.ImageData != null && item.ImageData.Length > 0)
+                    {
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.ImageData)" alt="Item Image" width="100" />
+                    }
+                    else
+                    {
+                        <span>No image available</span>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    <a asp-controller="Item" asp-action="Details" asp-route-id="@item.ItemId">Details</a>  <!-- Linking to ItemController --> |
+                    <a asp-action="Add to cart" asp-route-id="">Add to cart</a>   <!-- we should fix this one -->
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
