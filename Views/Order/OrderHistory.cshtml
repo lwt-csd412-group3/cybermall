@@ -1,0 +1,40 @@
+﻿@model IEnumerable<CyberMall.Models.PreviousOrders>
+
+@{
+    ViewData["Title"] = "Order History";
+}
+
+<h1>Your Order History</h1>
+
+<div class="container">
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No Previous orders to display.
+        </div>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Purchase Date</th>
+                    <th>Total Amount</th>
+                    <th>Tax</th>
+                    <th>Shipping</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>@order.PurchaseDate.ToString("MM/dd/yyyy")</td>
+                        <td>$@order.TotalAmount.ToString("F2")</td>
+                        <td>$@order.TaxAmount.ToString("F2")</td>
+                        <td>$@order.ShippingCost.ToString("F2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
