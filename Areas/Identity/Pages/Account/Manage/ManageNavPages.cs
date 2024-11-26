@@ -12,6 +12,8 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
 
         public static string Email => "Email";
 
+        public static string ShippingAddress => "ShippingAddress";
+
         public static string ChangePassword => "ChangePassword";
 
         public static string DownloadPersonalData => "DownloadPersonalData";
@@ -29,6 +31,8 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
         public static string EmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, Email);
 
         public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
+
+        public static string ShippingAddressNavClass(ViewContext viewContext) => PageNavClass(viewContext, ShippingAddress);
 
         public static string DownloadPersonalDataNavClass(ViewContext viewContext) => PageNavClass(viewContext, DownloadPersonalData);
 
