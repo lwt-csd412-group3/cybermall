@@ -2,9 +2,10 @@
 
 namespace CyberMall.Models
 {
-    public class Item
+    public class ItemListing
     {
-        public int ItemId { get; set; } // Primary key
+        public ApplicationUser Seller { get; set; }
+        public int ItemListingId { get; set; } // Primary key
         public string ProductName { get; set; } // Name of the product
         public string Description { get; set; } // Description of the product
         public byte[] ImageData { get; set; } // Byte array to store image

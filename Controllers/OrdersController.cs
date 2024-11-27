@@ -14,14 +14,14 @@ namespace CyberMall.Controllers
                 // placeholder orders
                 new PreviousOrders
                 {
-                    TaxAmount = 2.50,
-                    ShippingCost = 5.99,
+                    TaxAmount = 2.50M,
+                    ShippingCost = 5.99M,
                     PurchaseDate = DateTime.Now.AddDays(-5)
                 },
                 new PreviousOrders
                 {
-                    TaxAmount = 1.75,
-                    ShippingCost = 5.99,
+                    TaxAmount = 1.75M,
+                    ShippingCost = 5.99M,
                     PurchaseDate = DateTime.Now.AddDays(-10)
                 }
             };

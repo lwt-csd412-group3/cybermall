@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CyberMall.Models.Item>
+﻿@model IEnumerable<CyberMall.Models.ItemListing>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -60,7 +60,7 @@
                     @Html.DisplayFor(modelItem => item.Quantity)
                 </td>
                 <td>
-                    <a asp-controller="Item" asp-action="Details" asp-route-id="@item.ItemId">Details</a>  <!-- Linking to ItemController --> |
+                    <a asp-controller="Item" asp-action="Details" asp-route-id="@item.ItemListingId">Details</a>  <!-- Linking to ItemController --> |
                     <a asp-action="Add to cart" asp-route-id="">Add to cart</a>   <!-- we should fix this one -->
                     
                 </td>

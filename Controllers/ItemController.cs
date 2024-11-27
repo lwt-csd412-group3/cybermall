@@ -24,7 +24,7 @@ namespace CyberMall.Controllers
         // GET: Item
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Items.ToListAsync());
+            return View(await _context.ItemListings.ToListAsync());
         }
 
         // GET: Item/Details/5
@@ -35,8 +35,8 @@ namespace CyberMall.Controllers
                 return NotFound();
             }
 
-            var item = await _context.Items
-                .FirstOrDefaultAsync(m => m.ItemId == id);
+            var item = await _context.ItemListings
+                .FirstOrDefaultAsync(m => m.ItemListingId == id);
             if (item == null)
             {
                 return NotFound();
@@ -56,7 +56,7 @@ namespace CyberMall.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Item item, IFormFile imageFile)
+        public async Task<IActionResult> Create(ItemListing item, IFormFile imageFile)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +87,7 @@ namespace CyberMall.Controllers
                 return NotFound();
             }
 
-            var item = await _context.Items.FindAsync(id);
+            var item = await _context.ItemListings.FindAsync(id);
             if (item == null)
             {
                 return NotFound();
@@ -100,9 +100,9 @@ namespace CyberMall.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Item item, IFormFile imageFile)
+        public async Task<IActionResult> Edit(int id, ItemListing item, IFormFile imageFile)
         {
-            if (id != item.ItemId)
+            if (id != item.ItemListingId)
             {
                 return NotFound();
             }
@@ -124,7 +124,7 @@ namespace CyberMall.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ItemExists(item.ItemId))
+                    if (!ItemExists(item.ItemListingId))
                     {
                         return NotFound();
                     }
@@ -146,8 +146,8 @@ namespace CyberMall.Controllers
                 return NotFound();
             }
 
-            var item = await _context.Items
-                .FirstOrDefaultAsync(m => m.ItemId == id);
+            var item = await _context.ItemListings
+                .FirstOrDefaultAsync(m => m.ItemListingId == id);
             if (item == null)
             {
                 return NotFound();
@@ -161,15 +161,15 @@ namespace CyberMall.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var item = await _context.Items.FindAsync(id);
-            _context.Items.Remove(item);
+            var item = await _context.ItemListings.FindAsync(id);
+            _context.ItemListings.Remove(item);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ItemExists(int id)
         {
-            return _context.Items.Any(e => e.ItemId == id);
+            return _context.ItemListings.Any(e => e.ItemListingId == id);
         }
     }
 }

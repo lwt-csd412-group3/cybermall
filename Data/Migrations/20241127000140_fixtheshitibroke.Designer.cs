@@ -4,14 +4,16 @@ using CyberMall.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CyberMall.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241127000140_fixtheshitibroke")]
+    partial class fixtheshitibroke
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,12 +132,7 @@ namespace CyberMall.Data.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("SellerId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("ItemListingId");
-
-                    b.HasIndex("SellerId");
 
                     b.ToTable("ItemListings");
                 });
@@ -299,13 +296,6 @@ namespace CyberMall.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("CyberMall.Models.ItemListing", b =>
-                {
-                    b.HasOne("CyberMall.Models.ApplicationUser", "Seller")
-                        .WithMany()
-                        .HasForeignKey("SellerId");
                 });
 
             modelBuilder.Entity("CyberMall.Models.Order", b =>
