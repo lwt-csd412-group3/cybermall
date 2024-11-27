@@ -14,6 +14,6 @@ namespace CyberMall.Data
         {
         }
 
-        public DbSet<Item> Items { get; set; }
+        public DbSet<ItemListing> ItemListings { get; set; }
     }
 }
