@@ -2,6 +2,7 @@
 using CyberMall.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient.DataClassification;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -20,21 +21,23 @@ namespace CyberMall.Controllers
         }
 
         [HttpGet]
-        [HttpGet("{id}")]
-        public async Task<List<ItemListing>> Index(int? id)
+        public async Task<List<ItemListing>> Index()
         {
-            if (id == null)
+            return await _context.ItemListings.ToListAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Index(int? id)
+        {
+            List<ItemListing> itemList = new List<ItemListing>();
+            ItemListing listing = await _context.ItemListings.FindAsync(id);
+
+            itemList.Add(listing);
+            if (listing == null)
             {
-                // To-Do: don't just leak everything and create a container object
-                return await _context.ItemListings.ToListAsync();
-            }    
-            else
-            {
-                List<ItemListing> itemList = new List<ItemListing>();
-                ItemListing listing = await _context.ItemListings.FindAsync(id);
-                itemList.Add(listing);
-                return itemList;
+                return NotFound(itemList);
             }
+            return Ok(itemList);
         }
 
     }
