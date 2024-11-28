@@ -19,6 +19,8 @@ namespace CyberMall.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<List<ItemListing>> Index(int? id)
         {
             if (id == null)
