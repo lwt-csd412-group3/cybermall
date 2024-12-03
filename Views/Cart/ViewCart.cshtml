@@ -1,0 +1,55 @@
+﻿@model IEnumerable<CyberMall.Models.ItemSale>
+
+@{
+    ViewData["Title"] = "View Cart";
+}
+
+<h1>Your Cart</h1>
+
+<form method="post" asp-action="UpdateCart">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ItemListing.ProductName</td>
+                    <td>$@item.Price.ToString("F2")</td>
+                    <td>
+                        <!-- Allow the user to change the quantity -->
+                        <input type="number" name="quantities[@item.Id]" value="@item.Quantity" min="1" class="form-control" />
+                    </td>
+                    <td>$@((item.Price * item.Quantity).ToString("F2"))</td>
+                    <td>
+                        <form method="post" asp-action="RemoveFromCart" asp-route-itemListingId="@item.ItemListingId">
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        <button type="submit" class="btn btn-primary">Update Quantities</button>
+    </div>
+  
+</form>
+<hr />
+<div>
+    <a asp-action="Checkout" class="btn btn-primary">Proceed to Checkout</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

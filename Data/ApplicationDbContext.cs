@@ -27,5 +27,7 @@ namespace CyberMall.Data
                 .HasForeignKey(il => il.SellerId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
+
+        public DbSet<CyberMall.Models.ItemSale> ItemSale { get; set; }
     }
 }
