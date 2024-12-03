@@ -5,6 +5,7 @@ namespace CyberMall.Models
     public class ItemListing
     {
         public ApplicationUser Seller { get; set; }
+        public string SellerId { get; set; } // Foreign key for ApplicationUser
         public int ItemListingId { get; set; } // Primary key
         public string ProductName { get; set; } // Name of the product
         public string Description { get; set; } // Description of the product

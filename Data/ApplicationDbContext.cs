@@ -15,5 +15,17 @@ namespace CyberMall.Data
         }
 
         public DbSet<ItemListing> ItemListings { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            // Configure relationship between ItemListing and ApplicationUser
+            builder.Entity<ItemListing>()
+                .HasOne(il => il.Seller)
+                .WithMany()
+                .HasForeignKey(il => il.SellerId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }
