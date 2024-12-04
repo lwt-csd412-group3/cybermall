@@ -33,7 +33,15 @@ namespace CyberMall.Controllers
         {
             var currentUser = await _userManager.GetUserAsync(User);
             var itemListings = await _context.ItemListings.Where(il => il.Seller == currentUser).ToListAsync();
-            return View(itemListings);
+
+            ItemControllerIndexModel model = new ItemControllerIndexModel
+            {
+                itemListings = itemListings,
+                user = currentUser
+            };
+
+
+            return View(model);
         }
 
         // GET: Item/Details/5

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CyberMall.Models.ItemListing>
+﻿@model CyberMall.Models.ItemControllerIndexModel
 
 @{
     ViewData["Title"] = "Item";
@@ -32,7 +32,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.itemListings) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.ProductName)

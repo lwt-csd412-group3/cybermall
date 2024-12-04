@@ -17,6 +17,6 @@ namespace CyberMall.Models
         public int Quantity { get; set; } // Available quantity
 
         // Navigation property for related ItemSale
-        public ICollection<ItemSale> ItemSales { get; set; } // This allows you to access all ItemSale records related to this item
+        public virtual ICollection<ItemSale> ItemSales { get; set; } // This allows you to access all ItemSale records related to this item
     }
 }
