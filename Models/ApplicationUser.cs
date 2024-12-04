@@ -15,6 +15,6 @@ namespace CyberMall.Models
         public string ZipCode { get; set; }
         public string Country { get; set; }
 
-        public List<Order> OrderHistory { get; set; }
+        public virtual List<Order> OrderHistory { get; set; }
     }
 }

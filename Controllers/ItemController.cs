@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.WebSockets;
+using Microsoft.AspNetCore.Identity;
 
 namespace CyberMall.Controllers
 {
@@ -18,15 +20,20 @@ namespace CyberMall.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public ItemController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public ItemController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Item
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ItemListings.ToListAsync());
+            var currentUser = await _userManager.GetUserAsync(User);
+            var itemListings = await _context.ItemListings.Where(il => il.Seller == currentUser).ToListAsync();
+            return View(itemListings);
         }
 
         // GET: Item/Details/5
@@ -62,7 +69,9 @@ namespace CyberMall.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ItemListing item, IFormFile imageFile)
         {
-            item.SellerId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get logged-in user's ID
+            var currentUser = await _userManager.GetUserAsync(User);
+            item.Seller = currentUser;
+            //item.SellerId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get logged-in currentUser's ID
 
             if (ModelState.IsValid)
             {
@@ -94,15 +103,16 @@ namespace CyberMall.Controllers
                 return NotFound();
             }
 
-            var item = await _context.ItemListings.AsNoTracking().FirstOrDefaultAsync(il => il.ItemListingId == id);
+            var item = await _context.ItemListings.FirstOrDefaultAsync(il => il.ItemListingId == id);
 
             if (item == null)
             {
                 return NotFound();
             }
 
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (item.SellerId != currentUserId)
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if (item.Seller != currentUser)
             {
                 return Forbid(); // Deny access if not the owner
             }
@@ -123,20 +133,26 @@ namespace CyberMall.Controllers
             }
 
             // Fetch the existing item from the database to retrieve the original SellerId
-            var existingItem = await _context.ItemListings.AsNoTracking().FirstOrDefaultAsync(il => il.ItemListingId == id);
+            var existingItem = await _context.ItemListings.FirstOrDefaultAsync(il => il.ItemListingId == id);
+
+            var currentUser = await _userManager.GetUserAsync(User);
 
             if (existingItem == null)
             {
                 return NotFound();
             }
 
-            if (existingItem.SellerId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            if (existingItem.Seller != currentUser)
             {
                 return Forbid(); // Prevent unauthorized editing
             }
 
-            // Preserve the SellerId from the existing item
-            item.SellerId = existingItem.SellerId;
+
+
+            _context.Entry(existingItem).CurrentValues.SetValues(item);
+
+            // preserve seller information
+            item.Seller = currentUser;
 
             if (ModelState.IsValid)
             {
@@ -148,15 +164,10 @@ namespace CyberMall.Controllers
                         using (var memoryStream = new MemoryStream())
                         {
                             await imageFile.CopyToAsync(memoryStream);
-                            item.ImageData = memoryStream.ToArray(); // Update ImageData with the uploaded file
+                            existingItem.ImageData = memoryStream.ToArray(); // Update ImageData with the uploaded file
                         }
                     }
-
-                    else
-                    {
-                        item.ImageData = existingItem.ImageData; // Retain the existing image if no new file is uploaded
-                    }
-                    _context.Update(item);
+                    //_context.Update(item);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -184,14 +195,16 @@ namespace CyberMall.Controllers
                 return NotFound();
             }
 
-            var item = await _context.ItemListings.AsNoTracking().FirstOrDefaultAsync(il => il.ItemListingId == id);
+            var item = await _context.ItemListings.FirstOrDefaultAsync(il => il.ItemListingId == id);
+
+            var currentUser = await _userManager.GetUserAsync(User);
 
             if (item == null)
             {
                 return NotFound();
             }
 
-            if (item.SellerId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            if (item.Seller != currentUser)
             {
                 return Forbid(); // Ensure only the owner can delete
             }
@@ -207,12 +220,14 @@ namespace CyberMall.Controllers
         {
             var item = await _context.ItemListings.FindAsync(id);
 
+            var currentUser = await _userManager.GetUserAsync(User);
+
             if (item == null)
             {
                 return NotFound();
             }
 
-            if (item.SellerId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            if (item.Seller != currentUser)
             {
                 return Forbid(); // Ensure only the owner can delete
             }

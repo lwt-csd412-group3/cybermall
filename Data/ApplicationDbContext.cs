@@ -20,12 +20,6 @@ namespace CyberMall.Data
         {
             base.OnModelCreating(builder);
 
-            // Configure relationship between ItemListing and ApplicationUser
-            builder.Entity<ItemListing>()
-                .HasOne(il => il.Seller)
-                .WithMany()
-                .HasForeignKey(il => il.SellerId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<CyberMall.Models.ItemSale> ItemSale { get; set; }
