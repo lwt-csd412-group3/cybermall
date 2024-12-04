@@ -6,44 +6,38 @@
 
 <h1>Your Cart</h1>
 
-<form method="post" asp-action="UpdateCart">
-    <table class="table">
-        <thead>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
             <tr>
-                <th>Product Name</th>
-                <th>Unit Price</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.ItemListing.ProductName</td>
-                    <td>$@item.Price.ToString("F2")</td>
-                    <td>
-                        <!-- Allow the user to change the quantity -->
+                <td>@item.ItemListing.ProductName</td>
+                <td>$@item.Price.ToString("F2")</td>
+                <td>
+                    <form asp-action="UpdateCart" method="post" style="display: inline;">
                         <input type="number" name="quantities[@item.Id]" value="@item.Quantity" min="1" class="form-control" />
-                    </td>
-                    <td>$@((item.Price * item.Quantity).ToString("F2"))</td>
-                    <td>
-                        <form method="post" asp-action="RemoveFromCart" asp-route-itemListingId="@item.ItemListingId">
-                            <button type="submit" class="btn btn-danger">Remove</button>
-                        </form>
-
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <div>
-        <button type="submit" class="btn btn-primary">Update Quantities</button>
-    </div>
-  
-</form>
-<hr />
+                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                    </form>
+                </td>
+                <td>$@((item.Price * item.Quantity).ToString("F2"))</td>
+                <td>
+                    <form asp-action="RemoveFromCart" asp-route-itemListingId="@item.ItemListingId" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 <div>
     <a asp-action="Checkout" class="btn btn-primary">Proceed to Checkout</a>
 </div>
