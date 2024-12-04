@@ -23,9 +23,8 @@
                 <td>@item.ItemListing.ProductName</td>
                 <td>$@item.Price.ToString("F2")</td>
                 <td>
-                    <form asp-action="UpdateCart" method="post" style="display: inline;">
-                        <input type="number" name="quantities[@item.Id]" value="@item.Quantity" min="1" class="form-control" />
-                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                    <form asp-action="UpdateCart" method="post" style="display: inline;" class="quantity-form">
+                        <input type="number" name="quantities[@item.Id]" value="@item.Quantity" min="1" class="form-control quantity-input" />
                     </form>
                 </td>
                 <td>$@((item.Price * item.Quantity).ToString("F2"))</td>
@@ -46,4 +45,11 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            input.addEventListener('change', function () {
+                this.closest('form').submit();
+            });
+        });
+    </script>
 }
