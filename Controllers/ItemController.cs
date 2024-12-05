@@ -224,7 +224,7 @@ namespace CyberMall.Controllers
         [HttpPost, ActionName("Delete")]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var item = await _context.ItemListings.FindAsync(id);
 
