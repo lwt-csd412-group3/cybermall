@@ -11,6 +11,8 @@ namespace CyberMall.Models
 
         public List<SelectListItem> ShippingAddressList { get; private set; }
 
+        public List<SelectListItem> PaymentMethodList { get; private set; }
+
         public CartControllerCheckoutModel(ApplicationUser user, Order order)
         {
             User = user;
@@ -18,26 +20,43 @@ namespace CyberMall.Models
 
             ShippingAddressList = new List<SelectListItem>();
 
+            PaymentMethodList = new List<SelectListItem>();
+
+            addAddressToList(user.PrimaryAddress);
+
             foreach (Address address in user.SecondaryAddresses)
             {
-                if (address != user.PrimaryAddress)
-                {
+                addAddressToList(address);
+            }
 
-                }
+            foreach (CardPaymentMethod paymentMethod in user.PaymentMethods)
+            {
+                addPaymentMethodToList(paymentMethod);
             }
         }
 
         private void addAddressToList(Address address)
         {
             ShippingAddressList.Add(
-                    new SelectListItem
-                    {
-                        Text = address.AddressLine1 + "\n"
-                            + address.AddressLine2 ?? ""
+                new SelectListItem
+                {
+                    Text = address.AddressLine1 + "\n"
+                        + (address.AddressLine2 ?? "")
                         + address.City + " " + address.Region + " " + address.Country + "\n"
                         + address.ZipCode,
-                        Value = address.Id.ToString()
-                    }
+                    Value = address.Id.ToString()
+                }
+            );
+        }
+
+        private void addPaymentMethodToList(CardPaymentMethod paymentMethod)
+        {
+            PaymentMethodList.Add(
+                new SelectListItem
+                {
+                    Text = paymentMethod.PaymentType.ToString() + " *" + paymentMethod.LastFourDigits,
+                    Value = paymentMethod.Id.ToString()
+                }
             );
         }
 

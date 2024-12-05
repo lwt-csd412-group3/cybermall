@@ -16,5 +16,7 @@ namespace CyberMall.Models
         public virtual List<Order> OrderHistory { get; set; }
 
         public virtual List<ItemSale> ItemsInCart { get; set; }
+
+        public virtual List<CardPaymentMethod> PaymentMethods { get; set; }
     }
 }

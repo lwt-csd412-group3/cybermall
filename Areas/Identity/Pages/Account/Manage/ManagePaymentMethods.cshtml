@@ -1,0 +1,19 @@
+﻿@page
+@model ManagePaymentMethodsModel
+@{
+    ViewData["Title"] = "Payment Methods";
+    ViewData["ActivePage"] = ManageNavPages.PaymentMethods;
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        To-do: list previous payment methods<br />
+        <a class="btn btn-primary @ManageNavPages.PaymentMethodsNavClass(ViewContext)" id="create-payment-method" asp-page="./CreatePaymentMethod">Add a new Payment Method</a>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

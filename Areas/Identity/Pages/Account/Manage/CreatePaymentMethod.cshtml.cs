@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Linq;
-using System.Threading.Tasks;
-using CyberMall.Models;
+﻿using CyberMall.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CyberMall.Areas.Identity.Pages.Account.Manage
 {
-    public partial class ShippingAddressModel : PageModel
+    public partial class CreatePaymentMethodModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public ShippingAddressModel(
+        public CreatePaymentMethodModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager)
         {
@@ -29,8 +23,6 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
 
         public string Username { get; set; }
 
-        public Address PrimaryAddress { get; set; }
-
         [TempData]
         public string StatusMessage { get; set; }
 
@@ -39,13 +31,39 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            // To-Do: Write Input Model
+            [Required]
+            [CreditCard]
+            [Display(Name = "Card Number")]
+            public string NewCardNumber { get; set; }
+
+            [Display(Name = "Expiration Month")]
+            [StringLength(maximumLength: 2)]
+            public string NewExpirationMonth { get; set; }
+
+            [Display(Name = "Expiration Year")]
+            [StringLength(maximumLength: 4)]
+            public string NewExpirationYear { get; set; }
+
+
+            [Display(Name = "Security Code / CVC")]
+            public string NewCVC { get; set; }
+
+            [Required]
+            [Display(Name = "Cardholder First Name")]
+            public string NewFirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Cardholder Last Name")]
+            public string NewLastName { get; set; }
+
+
             [Required]
             [Display(Name = "Address Line 1")]
             public string NewAddressLine1 { get; set; }
 
             [Display(Name = "Address Line 2")]
             public string NewAddressLine2 { get; set; }
+
 
             [Required]
             [Display(Name = "City")]
@@ -65,23 +83,20 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(ApplicationUser user)
         {
-            Address primaryAddress = user.PrimaryAddress;
-            if (primaryAddress == null)
+           /* CardPaymentMethod paymentMethod = user.PaymentMethods.First();
+            if (paymentMethod == null)
             {
-                user.PrimaryAddress = primaryAddress = new Address();
-                await _userManager.UpdateAsync(user);
-            }
-            PrimaryAddress = user.PrimaryAddress;
+                user.PaymentMethods.Add(new CardPaymentMethod
+                {
+                    PaymentType = CardPaymentType.Generic
+                });
+            }*/
 
+            Address cardAddress = new Address();
 
             Input = new InputModel
             {
-                NewAddressLine1 = primaryAddress.AddressLine1,
-                NewAddressLine2 = primaryAddress.AddressLine2,
-                NewCity = primaryAddress.City,
-                NewRegion = primaryAddress.Region,
-                NewCountry = primaryAddress.Country,
-                NewZipCode = primaryAddress.ZipCode
+                
             };
         }
 
@@ -110,13 +125,29 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            Address primaryAddress = user.PrimaryAddress;
-            primaryAddress.AddressLine1 = Input.NewAddressLine1;
-            primaryAddress.AddressLine2 = Input.NewAddressLine2;
-            primaryAddress.City = Input.NewCity;
-            primaryAddress.Region = Input.NewRegion;
-            primaryAddress.Country = Input.NewCountry;
-            primaryAddress.ZipCode = Input.NewZipCode;
+            CardPaymentMethod paymentMethod = new CardPaymentMethod
+            {
+                FirstName = Input.NewFirstName,
+                LastName = Input.NewLastName,
+                CardNumber = Input.NewCardNumber,
+                ExpirationMonth = byte.Parse(Input.NewExpirationMonth),
+                ExpirationYear = short.Parse(Input.NewExpirationYear),
+                CVC = Input.NewCVC,
+                // to-do: do something better than auto assign default
+                PaymentType = CardPaymentType.Generic,
+                BillingAddress = new Address
+                {
+                    AddressLine1 = Input.NewAddressLine1,
+                    AddressLine2 = Input.NewAddressLine2,
+                    City = Input.NewCity,
+                    Region = Input.NewRegion,
+                    Country = Input.NewCountry,
+                    ZipCode = Input.NewZipCode
+                }
+            };
+
+            user.PaymentMethods.Add(paymentMethod);
+           
             await _userManager.UpdateAsync(user);
             return RedirectToPage();
         }

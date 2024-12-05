@@ -10,14 +10,24 @@ namespace CyberMall.Models
         public CardPaymentType PaymentType { get; set; }
         public byte ExpirationMonth { get; set; }
         public short ExpirationYear { get; set; }
-        public string PIN { get; set; }
+        public string CVC { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
 
         public virtual Address BillingAddress { get; set; }
+
+        public string LastFourDigits
+        {
+            get
+            {
+                return CardNumber.Substring(CardNumber.Length - 4);
+            }
+        }
 
     }
 
     public enum CardPaymentType
     {
-        Visa, MasterCard, Amex, Discover, UnionPay
+        Generic, Visa, MasterCard, Amex, Discover, UnionPay
     }
 }

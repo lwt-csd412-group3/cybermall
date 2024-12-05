@@ -8,9 +8,13 @@
 
 <p>Select a shipping address and payment method.</p>
 
-<p>Default shipping address:</p>
+<p>Select a shipping address or enter a new address:</p>
 <select asp-for="Order.ShippingAddress" asp-items="Model.ShippingAddressList">
-    <option></option>
+</select>
+
+<p>Select a payment method:</p>
+
+<select asp-for="Order.PaymentMethod" asp-items="Model.PaymentMethodList">
 </select>
 
 
