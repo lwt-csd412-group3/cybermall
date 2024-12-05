@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,6 +27,8 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
         [TempData]
         public string StatusMessage { get; set; }
 
+        public List<CardPaymentMethod> PaymentMethods { get; set; }
+
         [BindProperty]
         public InputModel Input { get; set; }
 
@@ -36,21 +39,16 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(ApplicationUser user)
         {
-           /* CardPaymentMethod paymentMethod = user.PaymentMethods.First();
-            if (paymentMethod == null)
-            {
-                user.PaymentMethods.Add(new CardPaymentMethod
-                {
-                    PaymentType = CardPaymentType.Generic
-                });
-            }*/
+            /* CardPaymentMethod paymentMethod = user.PaymentMethods.First();
+             if (paymentMethod == null)
+             {
+                 user.PaymentMethods.Add(new CardPaymentMethod
+                 {
+                     PaymentType = CardPaymentType.Generic
+                 });
+             }*/
 
-            Address cardAddress = new Address();
-
-            Input = new InputModel
-            {
-                
-            };
+            PaymentMethods = user.PaymentMethods;
         }
 
         public async Task<IActionResult> OnGetAsync()

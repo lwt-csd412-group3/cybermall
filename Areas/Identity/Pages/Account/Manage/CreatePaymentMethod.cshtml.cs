@@ -149,7 +149,7 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
             user.PaymentMethods.Add(paymentMethod);
            
             await _userManager.UpdateAsync(user);
-            return RedirectToPage();
+            return RedirectToPage("ManagePaymentMethods");
         }
     }
 }

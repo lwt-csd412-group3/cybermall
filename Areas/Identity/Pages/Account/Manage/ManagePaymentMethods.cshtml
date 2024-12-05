@@ -9,7 +9,16 @@
 <partial name="_StatusMessage" model="Model.StatusMessage" />
 <div class="row">
     <div class="col-md-6">
-        To-do: list previous payment methods<br />
+
+        @foreach (CardPaymentMethod paymentMethod in Model.PaymentMethods)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <span>@paymentMethod.PaymentType - @paymentMethod.LastFourDigits</span>
+                 </div>
+            </div>
+        }
+        <br />
         <a class="btn btn-primary @ManageNavPages.PaymentMethodsNavClass(ViewContext)" id="create-payment-method" asp-page="./CreatePaymentMethod">Add a new Payment Method</a>
     </div>
 </div>
