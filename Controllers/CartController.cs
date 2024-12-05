@@ -163,33 +163,41 @@ namespace CyberMall.Controllers
         [HttpPost]
         public async Task<IActionResult> ProcessCheckout(decimal subtotal, decimal tax, decimal shipping)
         {
+            // Get and verify current user
             var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Forbid();
-            }
+            if (user == null) return Forbid();
 
+            // Load user with related data
+            user = await _dbContext.Users
+                .Include(u => u.OrderHistory)
+                .Include(u => u.ItemsInCart)
+                .FirstOrDefaultAsync(u => u.Id == user.Id);
+
+            if (user == null) return NotFound();
+
+            // Create order from cart items
             var order = new Order
             {
                 TaxAmount = tax,
                 ShippingCost = shipping,
                 PurchaseDate = DateTime.UtcNow,
-                ItemsSold = new List<ItemSale>(user.ItemsInCart),
+                ItemsSold = user.ItemsInCart.Select(item => new ItemSale
+                {
+                    ItemListing = item.ItemListing,
+                    Price = item.Price,
+                    Quantity = item.Quantity,
+                    Discount = item.Discount,
+                    User = user
+                }).ToList(),
                 ShippingAddress = user.PrimaryAddress
             };
 
-            // Get order total
+            // Finalize order and update user
             order.CalculateTotal();
-
-            if (user.OrderHistory == null)
-            {
-                user.OrderHistory = new List<Order>();
-            }
-
+            if (user.OrderHistory == null) user.OrderHistory = new List<Order>();
             user.OrderHistory.Add(order);
             user.ItemsInCart.Clear();
             await _dbContext.SaveChangesAsync();
-
             return RedirectToAction("OrderHistory", "Order");
         }
 
