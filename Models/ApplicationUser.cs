@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace CyberMall.Models
 {
@@ -8,13 +9,12 @@ namespace CyberMall.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string City { get; set; }
-        public string Region { get; set; }
-        public string ZipCode { get; set; }
-        public string Country { get; set; }
+        public virtual Address PrimaryAddress { get; set; }
+
+        public virtual List<Address> ShippingAddresses { get; set; }
 
         public virtual List<Order> OrderHistory { get; set; }
+
+        public virtual List<ItemSale> ItemsInCart { get; set; }
     }
 }

@@ -32,14 +32,7 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
 
         public string Username { get; set; }
 
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-
-        public string City { get; set; }
-        public string Region { get; set; }
-        public string Country { get; set; }
-        public string ZipCode { get; set; }
-
+        public Address PrimaryAddress { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -75,21 +68,23 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(ApplicationUser user)
         {
-            AddressLine1 = user.AddressLine1;
-            AddressLine2 = user.AddressLine2;
-            City = user.City;
-            Region = user.Region;
-            Country = user.Country;
-            ZipCode = user.ZipCode;
+            Address primaryAddress = user.PrimaryAddress;
+            if (primaryAddress == null)
+            {
+                user.PrimaryAddress = primaryAddress = new Address();
+                await _userManager.UpdateAsync(user);
+            }
+            PrimaryAddress = user.PrimaryAddress;
+
 
             Input = new InputModel
             {
-                NewAddressLine1 = user.AddressLine1,
-                NewAddressLine2 = user.AddressLine2,
-                NewCity = user.City,
-                NewRegion = user.Region,
-                NewCountry = user.Country,
-                NewZipCode = user.ZipCode
+                NewAddressLine1 = primaryAddress.AddressLine1,
+                NewAddressLine2 = primaryAddress.AddressLine2,
+                NewCity = primaryAddress.City,
+                NewRegion = primaryAddress.Region,
+                NewCountry = primaryAddress.Country,
+                NewZipCode = primaryAddress.ZipCode
             };
         }
 
@@ -117,12 +112,14 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-            user.AddressLine1 = Input.NewAddressLine1;
-            user.AddressLine2 = Input.NewAddressLine2;
-            user.City = Input.NewCity;
-            user.Region = Input.NewRegion;
-            user.Country = Input.NewCountry;
-            user.ZipCode = Input.NewZipCode;
+
+            Address primaryAddress = user.PrimaryAddress;
+            primaryAddress.AddressLine1 = Input.NewAddressLine1;
+            primaryAddress.AddressLine2 = Input.NewAddressLine2;
+            primaryAddress.City = Input.NewCity;
+            primaryAddress.Region = Input.NewRegion;
+            primaryAddress.Country = Input.NewCountry;
+            primaryAddress.ZipCode = Input.NewZipCode;
             await _userManager.UpdateAsync(user);
             return RedirectToPage();
         }

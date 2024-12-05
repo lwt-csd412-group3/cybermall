@@ -45,8 +45,7 @@ namespace CyberMall.Controllers
             }
 
             // Check if the user already has this item in their cart
-            var existingItemSale = _dbContext.ItemSale
-                .FirstOrDefault(i => i.ItemListingId == itemListingId && i.UserId == user.Id);
+            var existingItemSale = user.ItemsInCart.Find(i => i.ItemListing.Id == itemListingId);
 
             if (existingItemSale != null)
             {
@@ -59,12 +58,11 @@ namespace CyberMall.Controllers
                 // Create a new cart item for the user
                 var itemSale = new ItemSale
                 {
-                    ItemListingId = itemListing.ItemListingId,
                     ItemListing = itemListing, // Link the ItemSale to ItemListing
                     Price = itemListing.Price, // Store the price at the time of the sale
                     Quantity = quantity,
                     Discount = 0, // Set discount logic if needed
-                    UserId = user?.Id // Associate with the current logged-in user
+                    User = user
                 };
 
                 _dbContext.ItemSale.Add(itemSale);
@@ -89,10 +87,7 @@ namespace CyberMall.Controllers
             }
 
             // Fetch the user's cart items from the database
-            var cartItems = _dbContext.ItemSale
-                                      .Include(i => i.ItemListing) // Include related ItemListing data
-                                      .Where(i => i.UserId == user.Id)
-                                      .ToList();
+            var cartItems = user.ItemsInCart;
 
             return View(cartItems); // Return the list of cart items to the view
         }
@@ -108,8 +103,7 @@ namespace CyberMall.Controllers
             }
 
             // Find the cart item for the user and itemListingId
-            var itemSale = await _dbContext.ItemSale
-                .FirstOrDefaultAsync(i => i.ItemListingId == itemListingId && i.UserId == user.Id);
+            var itemSale = user.ItemsInCart.Find(i => i.ItemListing.Id == itemListingId);
 
             if (itemSale == null)
             {
@@ -126,7 +120,7 @@ namespace CyberMall.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> UpdateCart(Dictionary<int, int> quantities)
+        public async Task<IActionResult> UpdateCart(Dictionary<long, int> quantities)
         {
             // Get the current user (assuming they are logged in)
             var user = await _userManager.GetUserAsync(User);
@@ -136,7 +130,7 @@ namespace CyberMall.Controllers
                 return Forbid(); // Deny access if not logged in
             }
 
-            foreach (var itemSale in _dbContext.ItemSale.Where(i => i.UserId == user.Id))
+            foreach (var itemSale in user.ItemsInCart)
             {
                 if (quantities.ContainsKey(itemSale.Id))
                 {

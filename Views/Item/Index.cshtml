@@ -57,9 +57,9 @@
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ItemListingId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ItemListingId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ItemListingId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

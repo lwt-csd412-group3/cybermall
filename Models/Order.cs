@@ -1,14 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CyberMall.Models
 {
     public class Order
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         [Column(TypeName = "decimal(18,2)")] // Define precision and scale for decimal
-        public decimal Price { get; set; }
-        public int Quantity { get; set; }
+        public decimal TotalAmount { get; private set; }
         [Column(TypeName = "decimal(18,2)")] // Define precision and scale for decimal
-        public decimal Discount { get; set; }
+        public decimal TaxAmount { get; set; }
+        [Column(TypeName = "decimal(18,2)")] // Define precision and scale for decimal
+        public decimal ShippingCost { get; set; }
+        public DateTime PurchaseDate { get; set; }
+
+        public virtual List<ItemSale> ItemsSold { get; set; }
     }
 }

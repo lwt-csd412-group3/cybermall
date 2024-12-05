@@ -4,14 +4,16 @@ using CyberMall.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CyberMall.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241205042000_multiaddress-part1")]
+    partial class multiaddresspart1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,9 +23,9 @@ namespace CyberMall.Data.Migrations
 
             modelBuilder.Entity("CyberMall.Models.Address", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("AddressId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AddressLine1")
@@ -53,7 +55,7 @@ namespace CyberMall.Data.Migrations
                     b.Property<string>("ZipCode")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("AddressId");
 
                     b.HasIndex("ApplicationUserId");
 
@@ -108,8 +110,8 @@ namespace CyberMall.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<long?>("PrimaryAddressId")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("PrimaryAddressAddressId")
+                        .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -131,16 +133,16 @@ namespace CyberMall.Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("PrimaryAddressId");
+                    b.HasIndex("PrimaryAddressAddressId");
 
                     b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("CyberMall.Models.ItemListing", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("ItemListingId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
@@ -161,7 +163,7 @@ namespace CyberMall.Data.Migrations
                     b.Property<string>("SellerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ItemListingId");
 
                     b.HasIndex("SellerId");
 
@@ -170,19 +172,16 @@ namespace CyberMall.Data.Migrations
 
             modelBuilder.Entity("CyberMall.Models.ItemSale", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<long?>("ItemListingId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("OrderId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("ItemListingId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -197,8 +196,6 @@ namespace CyberMall.Data.Migrations
 
                     b.HasIndex("ItemListingId");
 
-                    b.HasIndex("OrderId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("ItemSale");
@@ -206,25 +203,22 @@ namespace CyberMall.Data.Migrations
 
             modelBuilder.Entity("CyberMall.Models.Order", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("ShippingCost")
+                    b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("TaxAmount")
+                    b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -379,7 +373,7 @@ namespace CyberMall.Data.Migrations
                 {
                     b.HasOne("CyberMall.Models.Address", "PrimaryAddress")
                         .WithMany()
-                        .HasForeignKey("PrimaryAddressId");
+                        .HasForeignKey("PrimaryAddressAddressId");
                 });
 
             modelBuilder.Entity("CyberMall.Models.ItemListing", b =>
@@ -393,14 +387,12 @@ namespace CyberMall.Data.Migrations
                 {
                     b.HasOne("CyberMall.Models.ItemListing", "ItemListing")
                         .WithMany("ItemSales")
-                        .HasForeignKey("ItemListingId");
-
-                    b.HasOne("CyberMall.Models.Order", null)
-                        .WithMany("ItemsSold")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("ItemListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CyberMall.Models.ApplicationUser", "User")
-                        .WithMany("ItemsInCart")
+                        .WithMany()
                         .HasForeignKey("UserId");
                 });
 

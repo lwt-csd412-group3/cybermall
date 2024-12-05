@@ -53,7 +53,7 @@ namespace CyberMall.Controllers
             }
 
             var item = await _context.ItemListings
-                .FirstOrDefaultAsync(m => m.ItemListingId == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (item == null)
             {
                 return NotFound();
@@ -111,7 +111,7 @@ namespace CyberMall.Controllers
                 return NotFound();
             }
 
-            var item = await _context.ItemListings.FirstOrDefaultAsync(il => il.ItemListingId == id);
+            var item = await _context.ItemListings.FirstOrDefaultAsync(il => il.Id == id);
 
             if (item == null)
             {
@@ -135,13 +135,13 @@ namespace CyberMall.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ItemListing item, IFormFile imageFile)
         { 
-            if (id != item.ItemListingId)
+            if (id != item.Id)
             {
                 return NotFound();
             }
 
             // Fetch the existing item from the database to retrieve the original SellerId
-            var existingItem = await _context.ItemListings.FirstOrDefaultAsync(il => il.ItemListingId == id);
+            var existingItem = await _context.ItemListings.FirstOrDefaultAsync(il => il.Id == id);
 
             var currentUser = await _userManager.GetUserAsync(User);
 
@@ -180,7 +180,7 @@ namespace CyberMall.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ItemExists(item.ItemListingId))
+                    if (!ItemExists(item.Id))
                     {
                         return NotFound();
                     }
@@ -203,7 +203,7 @@ namespace CyberMall.Controllers
                 return NotFound();
             }
 
-            var item = await _context.ItemListings.FirstOrDefaultAsync(il => il.ItemListingId == id);
+            var item = await _context.ItemListings.FirstOrDefaultAsync(il => il.Id == id);
 
             var currentUser = await _userManager.GetUserAsync(User);
 
@@ -244,9 +244,9 @@ namespace CyberMall.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ItemExists(int id)
+        private bool ItemExists(long id)
         {
-            return _context.ItemListings.Any(e => e.ItemListingId == id);
+            return _context.ItemListings.Any(e => e.Id == id);
         }
     }
 }

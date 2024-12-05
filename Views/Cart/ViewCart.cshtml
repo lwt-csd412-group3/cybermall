@@ -29,7 +29,7 @@
                 </td>
                 <td>$@((item.Price * item.Quantity).ToString("F2"))</td>
                 <td>
-                    <form asp-action="RemoveFromCart" asp-route-itemListingId="@item.ItemListingId" method="post" style="display: inline;">
+                    <form asp-action="RemoveFromCart" asp-route-itemListingId="@item.ItemListing.Id" method="post" style="display: inline;">
                         <button type="submit" class="btn btn-danger">Remove</button>
                     </form>
                 </td>

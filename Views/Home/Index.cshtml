@@ -60,11 +60,11 @@
                     @Html.DisplayFor(modelItem => item.Quantity)
                 </td>
                 <td>
-                    <a asp-controller="Item" asp-action="Details" asp-route-id="@item.ItemListingId">Details</a> | <!-- Linking to ItemController -->
+                    <a asp-controller="Item" asp-action="Details" asp-route-id="@item.Id">Details</a> | <!-- Linking to ItemController -->
                     <!-- Link to add the item to the cart -->
                     <a asp-controller="Cart"
                        asp-action="AddToCart"
-                       asp-route-itemListingId="@item.ItemListingId">
+                       asp-route-itemListingId="@item.Id">
                         Add to Cart
                     </a>
                     
