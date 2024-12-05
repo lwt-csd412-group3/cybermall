@@ -12,7 +12,7 @@ namespace CyberMall.Models
         public short ExpirationYear { get; set; }
         public string PIN { get; set; }
 
-        public Address BillingAddress { get; set; }
+        public virtual Address BillingAddress { get; set; }
 
     }
 

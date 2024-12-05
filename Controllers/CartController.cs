@@ -149,7 +149,28 @@ namespace CyberMall.Controllers
 
 
         // Checkout (a simple placeholder action for the checkout process)
-        public async Task<IActionResult> Checkout()
+        public async Task<IActionResult> PrepareCheckout()
+        {
+            // Get the current user (assuming they are logged in)
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return Forbid(); // Deny access if not logged in
+            }
+
+            var order = new Order();
+
+
+            var model = new CartControllerCheckoutModel(user, order);
+
+
+
+            return View(model); // TODO: implement the actual checkout logic here
+        }
+
+        // Review cart details when checking out
+        public async Task<IActionResult> CheckoutReview()
         {
             // Get the current user (assuming they are logged in)
             var user = await _userManager.GetUserAsync(User);
@@ -164,5 +185,7 @@ namespace CyberMall.Controllers
 
             return View(cartItems); // TODO: implement the actual checkout logic here
         }
+
+        
     }
 }

@@ -16,5 +16,10 @@ namespace CyberMall.Models
         public DateTime PurchaseDate { get; set; }
 
         public virtual List<ItemSale> ItemsSold { get; set; }
+
+        public virtual CardPaymentMethod PaymentMethod { get; set; }
+
+        public virtual Address ShippingAddress { get; set; }
+
     }
 }

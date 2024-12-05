@@ -11,7 +11,7 @@ namespace CyberMall.Models
 
         public virtual Address PrimaryAddress { get; set; }
 
-        public virtual List<Address> ShippingAddresses { get; set; }
+        public virtual List<Address> SecondaryAddresses { get; set; }
 
         public virtual List<Order> OrderHistory { get; set; }
 

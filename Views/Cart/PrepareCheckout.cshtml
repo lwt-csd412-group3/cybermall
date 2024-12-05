@@ -1,0 +1,17 @@
+﻿@model CartControllerCheckoutModel
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h1>Checkout</h1>
+
+<p>Select a shipping address and payment method.</p>
+
+<p>Default shipping address:</p>
+<select asp-for="Order.ShippingAddress" asp-items="Model.ShippingAddressList">
+    <option></option>
+</select>
+
+
+<!--  add  checkout form here -->

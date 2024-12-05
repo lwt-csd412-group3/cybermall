@@ -114,7 +114,8 @@ namespace CyberMall.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser {
+                var user = new ApplicationUser
+                {
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
                     UserName = Input.Email,
@@ -129,9 +130,9 @@ namespace CyberMall.Areas.Identity.Pages.Account
                         Region = Input.Region,
                         ZipCode = Input.ZipCode,
                         Country = Input.Country
-                    }
+                    },
+                    SecondaryAddresses = new List<Address>()
                 };
-                user.ShippingAddresses.Add(user.PrimaryAddress);
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
