@@ -24,7 +24,7 @@ namespace CyberMall.Controllers
         }
 
         // Add an item to the cart (this is a GET method for linking)
-        public async Task<IActionResult> AddToCart(int itemListingId)
+        public async Task<IActionResult> AddToCart(long itemListingId)
         {
             int quantity = 1; // Default quantity is set to 1
 
