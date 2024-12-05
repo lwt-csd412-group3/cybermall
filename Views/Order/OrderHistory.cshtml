@@ -15,26 +15,31 @@
     }
     else
     {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Purchase Date</th>
-                    <th>Total Amount</th>
-                    <th>Tax</th>
-                    <th>Shipping</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in Model)
-                {
-                    <tr>
-                        <td>@order.PurchaseDate.ToString("MM/dd/yyyy")</td>
-                        <td>$@order.TotalAmount.ToString("F2")</td>
-                        <td>$@order.TaxAmount.ToString("F2")</td>
-                        <td>$@order.ShippingCost.ToString("F2")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        @foreach (var order in Model)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title mb-2">Order from @order.PurchaseDate.ToString("MM/dd/yyyy")</h5>
+                            <p class="mb-1">Total Amount: $@order.TotalAmount.ToString("F2")</p>
+                            <p class="mb-1">Tax: $@order.TaxAmount.ToString("F2")</p>
+                            <p class="mb-1">Shipping: $@order.ShippingCost.ToString("F2")</p>
+                        </div>
+                        <form asp-action="DeleteOrder" asp-route-orderId="@order.Id" method="post" class="mb-0">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-link text-danger"
+                                    onclick="return confirm('Are you sure you want to delete this order?');">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
     }
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+}
