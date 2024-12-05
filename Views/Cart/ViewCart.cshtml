@@ -21,13 +21,22 @@
         {
             <tr>
                 <td>@item.ItemListing.ProductName</td>
-                <td>$@item.Price.ToString("F2")</td>
+                <td>$@item.Price.ToString("F2")
+                    @if (item.Discount > 0)
+                    {
+                        @:<br>&dash;
+                        @item.Discount.ToString("F2")
+                        @:<br>=
+                        @(item.DiscountedPrice.ToString("F2"))
+
+                    }
+                </td>
                 <td>
                     <form asp-action="UpdateCart" method="post" style="display: inline;" class="quantity-form">
                         <input type="number" name="quantities[@item.Id]" value="@item.Quantity" min="1" class="form-control quantity-input" />
                     </form>
                 </td>
-                <td>$@((item.Price * item.Quantity).ToString("F2"))</td>
+                <td>$@item.TotalPrice.ToString("F2")</td>
                 <td>
                     <form asp-action="RemoveFromCart" asp-route-itemListingId="@item.ItemListing.Id" method="post" style="display: inline;">
                         <button type="submit" class="btn btn-danger">Remove</button>
