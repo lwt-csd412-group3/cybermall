@@ -30,4 +30,37 @@
     </tbody>
 </table>
 
-<!--  add  checkout form here -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">Order Summary</h5>
+        @{
+            decimal subtotal = Model.Sum(item => item.TotalPrice);
+            decimal tax = subtotal * 0.10m; // 10% tax
+            decimal shipping = 10.00m; // Flat shipping cost
+            decimal total = subtotal + tax + shipping;
+        }
+        <dl class="row">
+            <dt class="col-sm-3">Subtotal:</dt>
+            <dd class="col-sm-9">$@subtotal.ToString("F2")</dd>
+
+            <dt class="col-sm-3">Tax (10%):</dt>
+            <dd class="col-sm-9">$@tax.ToString("F2")</dd>
+
+            <dt class="col-sm-3">Shipping:</dt>
+            <dd class="col-sm-9">$@shipping.ToString("F2")</dd>
+
+            <dt class="col-sm-3"><strong>Total:</strong></dt>
+            <dd class="col-sm-9"><strong>$@total.ToString("F2")</strong></dd>
+        </dl>
+
+        <form asp-action="ProcessCheckout" method="post">
+            <input type="hidden" name="subtotal" value="@subtotal" />
+            <input type="hidden" name="tax" value="@tax" />
+            <input type="hidden" name="shipping" value="@shipping" />
+            <div class="text-right">
+                <a asp-action="ViewCart" class="btn btn-secondary">Back to Cart</a>
+                <button type="submit" class="btn btn-success">Complete Purchase</button>
+            </div>
+        </form>
+    </div>
+</div>

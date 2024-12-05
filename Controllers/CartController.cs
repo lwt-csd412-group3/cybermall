@@ -153,39 +153,58 @@ namespace CyberMall.Controllers
         {
             // Get the current user (assuming they are logged in)
             var user = await _userManager.GetUserAsync(User);
-
             if (user == null)
             {
                 return Forbid(); // Deny access if not logged in
             }
+            return RedirectToAction("CheckoutReview");
+        }
 
-            var order = new Order();
+        [HttpPost]
+        public async Task<IActionResult> ProcessCheckout(decimal subtotal, decimal tax, decimal shipping)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Forbid();
+            }
 
+            var order = new Order
+            {
+                TaxAmount = tax,
+                ShippingCost = shipping,
+                PurchaseDate = DateTime.UtcNow,
+                ItemsSold = new List<ItemSale>(user.ItemsInCart),
+                ShippingAddress = user.PrimaryAddress
+            };
 
-            var model = new CartControllerCheckoutModel(user, order);
+            // Get order total
+            order.CalculateTotal();
 
+            if (user.OrderHistory == null)
+            {
+                user.OrderHistory = new List<Order>();
+            }
 
+            user.OrderHistory.Add(order);
+            user.ItemsInCart.Clear();
+            await _dbContext.SaveChangesAsync();
 
-            return View(model); // TODO: implement the actual checkout logic here
+            return RedirectToAction("OrderHistory", "Order");
         }
 
         // Review cart details when checking out
         public async Task<IActionResult> CheckoutReview()
         {
-            // Get the current user (assuming they are logged in)
             var user = await _userManager.GetUserAsync(User);
-
             if (user == null)
             {
-                return Forbid(); // Deny access if not logged in
+                return Forbid();
             }
 
-            // Fetch the user's cart items from the database
-            var cartItems = user.ItemsInCart;
-
-            return View(cartItems); // TODO: implement the actual checkout logic here
+            return View(user.ItemsInCart);
         }
 
-        
+
     }
 }
