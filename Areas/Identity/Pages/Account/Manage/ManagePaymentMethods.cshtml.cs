@@ -20,7 +20,7 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
         {
             _userManager = userManager;
             _signInManager = signInManager;
-        } 
+        }
 
         public string Username { get; set; }
 
@@ -34,19 +34,19 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            public int Action { get; set; }  // unused; see OnPostAsync for further details
 
+			[Required]
+			public long CardIdToDelete { get; set;  }
         }
 
         private async Task LoadAsync(ApplicationUser user)
         {
-            /* CardPaymentMethod paymentMethod = user.PaymentMethods.First();
-             if (paymentMethod == null)
-             {
-                 user.PaymentMethods.Add(new CardPaymentMethod
-                 {
-                     PaymentType = CardPaymentType.Generic
-                 });
-             }*/
+            Input = new InputModel
+            {
+
+            };
+
 
             PaymentMethods = user.PaymentMethods;
         }
@@ -61,6 +61,27 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
 
             await LoadAsync(user);
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            // we might have multiple action handlers in the future if we were to edit stuff
+            // but we don't need to edit anything right now
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            user.PaymentMethods.RemoveAll(i => i.Id == Input.CardIdToDelete);
+
+
+            await _userManager.UpdateAsync(user);
+            return RedirectToPage();
         }
     }
 }

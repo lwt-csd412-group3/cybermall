@@ -83,21 +83,7 @@ namespace CyberMall.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(ApplicationUser user)
         {
-           /* CardPaymentMethod paymentMethod = user.PaymentMethods.First();
-            if (paymentMethod == null)
-            {
-                user.PaymentMethods.Add(new CardPaymentMethod
-                {
-                    PaymentType = CardPaymentType.Generic
-                });
-            }*/
-
-            Address cardAddress = new Address();
-
-            Input = new InputModel
-            {
-                
-            };
+            // to-do: either do something with this stub or get rid of it
         }
 
         public async Task<IActionResult> OnGetAsync()

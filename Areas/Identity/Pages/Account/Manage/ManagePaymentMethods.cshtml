@@ -1,28 +1,43 @@
 ﻿@page
 @model ManagePaymentMethodsModel
 @{
-    ViewData["Title"] = "Payment Methods";
-    ViewData["ActivePage"] = ManageNavPages.PaymentMethods;
+	ViewData["Title"] = "Payment Methods";
+	ViewData["ActivePage"] = ManageNavPages.PaymentMethods;
 }
 
 <h4>@ViewData["Title"]</h4>
 <partial name="_StatusMessage" model="Model.StatusMessage" />
 <div class="row">
-    <div class="col-md-6">
+	<div class="col-md-6">
+		@{
+			int i = 0;
+		}
+		@foreach (CardPaymentMethod paymentMethod in Model.PaymentMethods)
+		{
+			<div class="card">
+				<div class="card-body">
+					<div class="d-flex justify-content-between align-items-center">
+						<div><span>@paymentMethod.PaymentType - @paymentMethod.LastFourDigits</span></div>
+						<form id="delete-card-@i" method="post">
+							<input type="hidden" class="form-control" asp-for="Input.CardIdToDelete" value="@(paymentMethod.Id)" />
+							@Html.AntiForgeryToken()
+							<button type="submit" class="btn btn-link text-danger"
+									onclick="return confirm('Are you sure you want to delete this card?');">
+								<i class="fas fa-trash"></i>
+							</button>
+						</form>
+					</div>
+				</div>
 
-        @foreach (CardPaymentMethod paymentMethod in Model.PaymentMethods)
-        {
-            <div class="card">
-                <div class="card-body">
-                    <span>@paymentMethod.PaymentType - @paymentMethod.LastFourDigits</span>
-                 </div>
-            </div>
-        }
-        <br />
-        <a class="btn btn-primary @ManageNavPages.PaymentMethodsNavClass(ViewContext)" id="create-payment-method" asp-page="./CreatePaymentMethod">Add a new Payment Method</a>
-    </div>
+			</div>
+
+			@(i += 1);
+		}
+		<br />
+		<a class="btn btn-primary @ManageNavPages.PaymentMethodsNavClass(ViewContext)" id="create-payment-method" asp-page="./CreatePaymentMethod">Add a new Payment Method</a>
+	</div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+	<partial name="_ValidationScriptsPartial" />
 }
