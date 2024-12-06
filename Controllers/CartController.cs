@@ -37,7 +37,7 @@ namespace CyberMall.Controllers
             }
 
             // Get the current user (assuming they are logged in)
-            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user = await _userManager.GetUserAsync(User);
 
             if (user == null)
             {
@@ -79,7 +79,7 @@ namespace CyberMall.Controllers
         public async Task<IActionResult> ViewCart()
         {
             // Get the current user (assuming they are logged in)
-            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user = await _userManager.GetUserAsync(User);
 
             if (user == null)
             {
@@ -96,7 +96,7 @@ namespace CyberMall.Controllers
         public async Task<IActionResult> RemoveFromCart(int itemListingId)
         {
             // Get the current user
-            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return Forbid(); // Deny access if not logged in
@@ -123,7 +123,7 @@ namespace CyberMall.Controllers
         public async Task<IActionResult> UpdateCart(Dictionary<long, int> quantities)
         {
             // Get the current user (assuming they are logged in)
-            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user = await _userManager.GetUserAsync(User);
 
             if (user == null)
             {
@@ -152,7 +152,7 @@ namespace CyberMall.Controllers
         public async Task<IActionResult> PrepareCheckout()
         {
             // Get the current user (assuming they are logged in)
-            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return Forbid(); // Deny access if not logged in
@@ -161,42 +161,45 @@ namespace CyberMall.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProcessCheckout(decimal subtotal, decimal tax, decimal shipping)
+        public async Task<IActionResult> ProcessCheckout(CartControllerCheckoutModel model)
         {
             // Get and verify current user
-            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user = await _userManager.GetUserAsync(User);
             if (user == null) return Forbid();
 
-            // Load user with related data
-            user = await _dbContext.Users
-                .Include(u => u.OrderHistory)
-                .Include(u => u.ItemsInCart)
-                .FirstOrDefaultAsync(u => u.Id == user.Id);
 
-            if (user == null) return NotFound();
 
-            // Create order from cart items
-            var order = new Order
+            Order order = user.CreateOrderFromCart();
+
+            foreach (ItemSale item in order.ItemsSold)
             {
-                TaxAmount = tax,
-                ShippingCost = shipping,
-                PurchaseDate = DateTime.UtcNow,
-                ItemsSold = user.ItemsInCart.Select(item => new ItemSale
+                if (item.Quantity > item.ItemListing.Quantity || item.ItemListing.Quantity <= 0)
                 {
-                    ItemListing = item.ItemListing,
-                    Price = item.Price,
-                    Quantity = item.Quantity,
-                    Discount = item.Discount,
-                    User = user
-                }).ToList(),
-                ShippingAddress = user.PrimaryAddress
-            };
+                    return Forbid();
+                }
+            }
 
-            // Finalize order and update user
-            order.CalculateTotal();
+            foreach (ItemSale item in order.ItemsSold)
+            {
+                item.ItemListing.Quantity -= item.Quantity;
+            }
+
+            if (model.SelectedAddressIndex == -1)
+            {
+                order.ShippingAddress = user.PrimaryAddress;
+            }
+            else
+            {
+                order.ShippingAddress = user.SecondaryAddresses[model.SelectedAddressIndex];
+            }
+
+            order.PaymentMethod = user.PaymentMethods[model.SelectedPaymentIndex];
+
             if (user.OrderHistory == null) user.OrderHistory = new List<Order>();
             user.OrderHistory.Add(order);
-            user.ItemsInCart.Clear();
+            user.ItemsInCart = new List<ItemSale>();
+
+            await _userManager.UpdateAsync(user);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("OrderHistory", "Order");
         }
@@ -204,13 +207,22 @@ namespace CyberMall.Controllers
         // Review cart details when checking out
         public async Task<IActionResult> CheckoutReview()
         {
-            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 return Forbid();
             }
 
-            return View(user.ItemsInCart);
+
+            Order order = user.CreateOrderFromCart();
+
+
+
+            CartControllerCheckoutModel model = new CartControllerCheckoutModel(user, order);
+
+
+            return View(model);
         }
 
 

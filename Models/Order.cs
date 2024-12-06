@@ -7,10 +7,24 @@ namespace CyberMall.Models
 {
     public class Order
     {
+
+        // using a constant for demonstation for tax and shipping
+
+        public const decimal DefaultTaxRate = 0.10m;
+        public const decimal DefaultShippingCost = 10.00m;
+        
+
+
         public long Id { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal TotalAmount { get; set; }
+        public decimal SubtotalAmount
+        {
+            get
+            {
+                return ItemsSold.Sum(i => i.TotalPrice);
+            }
+        }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal TaxAmount { get; set; }
@@ -26,10 +40,12 @@ namespace CyberMall.Models
 
         public virtual Address ShippingAddress { get; set; }
 
-        public void CalculateTotal()
+        public decimal TotalAmount
         {
-            decimal subtotal = ItemsSold?.Sum(item => item.TotalPrice) ?? 0;
-            TotalAmount = subtotal + TaxAmount + ShippingCost;
+            get
+            {
+                return (SubtotalAmount + ShippingCost + TaxAmount);
+            }
         }
     }
 }

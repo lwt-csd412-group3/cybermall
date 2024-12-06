@@ -23,11 +23,16 @@ namespace CyberMall.Models
                 return CardNumber.Substring(CardNumber.Length - 4);
             }
         }
-
+        public new string ToString()
+        {
+            return PaymentType.ToString() + " - " + LastFourDigits;
+        }
     }
 
     public enum CardPaymentType
     {
         Generic, Visa, MasterCard, Amex, Discover, UnionPay
     }
+
+    
 }

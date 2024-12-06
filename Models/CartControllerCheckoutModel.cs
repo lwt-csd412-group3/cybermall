@@ -13,6 +13,17 @@ namespace CyberMall.Models
 
         public List<SelectListItem> PaymentMethodList { get; private set; }
 
+
+        public int SelectedAddressIndex { get; set; }
+
+        public int SelectedPaymentIndex { get; set; }
+
+
+        public CartControllerCheckoutModel()
+        {
+        }
+
+
         public CartControllerCheckoutModel(ApplicationUser user, Order order)
         {
             User = user;
@@ -22,40 +33,45 @@ namespace CyberMall.Models
 
             PaymentMethodList = new List<SelectListItem>();
 
-            addAddressToList(user.PrimaryAddress);
+            addAddressToList(user.PrimaryAddress, -1);
+
+            int i = 0;
 
             foreach (Address address in user.SecondaryAddresses)
             {
-                addAddressToList(address);
+                addAddressToList(address, i);
             }
+
+            i = 0;
 
             foreach (CardPaymentMethod paymentMethod in user.PaymentMethods)
             {
-                addPaymentMethodToList(paymentMethod);
+                addPaymentMethodToList(paymentMethod, i++);
             }
+
         }
 
-        private void addAddressToList(Address address)
+        private void addAddressToList(Address address, int index)
         {
             ShippingAddressList.Add(
                 new SelectListItem
                 {
-                    Text = address.AddressLine1 + "\n"
-                        + (address.AddressLine2 ?? "")
-                        + address.City + " " + address.Region + " " + address.Country + "\n"
+                    Text = address.AddressLine1 + "<br>"
+                        + (address.AddressLine2 ?? "") + "<br>"
+                        + address.City + " " + address.Region + " " + address.Country + "<br>"
                         + address.ZipCode,
-                    Value = address.Id.ToString()
+                    Value = index.ToString()
                 }
             );
         }
 
-        private void addPaymentMethodToList(CardPaymentMethod paymentMethod)
+        private void addPaymentMethodToList(CardPaymentMethod paymentMethod, int index)
         {
             PaymentMethodList.Add(
                 new SelectListItem
                 {
-                    Text = paymentMethod.PaymentType.ToString() + " *" + paymentMethod.LastFourDigits,
-                    Value = paymentMethod.Id.ToString()
+                    Text = paymentMethod.ToString(),
+                    Value = index.ToString()
                 }
             );
         }
