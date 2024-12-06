@@ -16,6 +16,8 @@
     <Compile Remove="Data\Migrations\20241205051742_uselong-for-ids.Designer.cs" />
     <Compile Remove="Data\Migrations\20241205233326_revise-cart.cs" />
     <Compile Remove="Data\Migrations\20241205233326_revise-cart.Designer.cs" />
+    <Compile Remove="Data\Migrations\20241206050924_fixcolumntypes.cs" />
+    <Compile Remove="Data\Migrations\20241206050924_fixcolumntypes.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

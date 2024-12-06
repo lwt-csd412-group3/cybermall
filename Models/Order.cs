@@ -40,6 +40,7 @@ namespace CyberMall.Models
 
         public virtual Address ShippingAddress { get; set; }
 
+        [Column(TypeName = "decimal(18,2)")]
         public decimal TotalAmount
         {
             get

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CyberMall.Models
@@ -15,6 +16,9 @@ namespace CyberMall.Models
         public decimal Price { get; set; } // Price of the item
 
         public int Quantity { get; set; } // Available quantity
+
+        [DefaultValue(true)]
+        public bool Visible { get; set; }
 
         // Navigation property for related ItemSale
         public virtual ICollection<ItemSale> ItemSales { get; set; } // This allows you to access all ItemSale records related to this item

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CyberMall.Data;
 using CyberMall.Models;
 using Microsoft.AspNetCore.Identity;
+using Castle.Core.Internal;
 
 namespace CyberMall.Controllers
 {
@@ -149,6 +150,7 @@ namespace CyberMall.Controllers
 
 
         // Checkout (a simple placeholder action for the checkout process)
+        // This route is deprecated and will redirect to checkoutreview
         public async Task<IActionResult> PrepareCheckout()
         {
             // Get the current user (assuming they are logged in)
@@ -170,6 +172,11 @@ namespace CyberMall.Controllers
 
 
             Order order = user.CreateOrderFromCart();
+
+            if (order.ItemsSold.IsNullOrEmpty())
+            {
+                return RedirectToAction("ViewCart");
+            }
 
             foreach (ItemSale item in order.ItemsSold)
             {
@@ -223,7 +230,10 @@ namespace CyberMall.Controllers
 
             Order order = user.CreateOrderFromCart();
 
-
+            if (order.ItemsSold.IsNullOrEmpty())
+            {
+                return RedirectToAction("ViewCart");
+            }
 
             CartControllerCheckoutModel model = new CartControllerCheckoutModel(user, order);
 
