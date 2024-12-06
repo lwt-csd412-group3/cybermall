@@ -47,8 +47,13 @@ namespace CyberMall.Controllers
             }
             // Remove order form users history and related itemsales
             currentUser.OrderHistory.Remove(order);
+
             if (order.ItemsSold != null)
             {
+                foreach (ItemSale sale in order.ItemsSold)
+                {
+                    sale.ItemListing.Quantity += sale.Quantity;
+                }
                 _context.Set<ItemSale>().RemoveRange(order.ItemsSold);
             }
 
