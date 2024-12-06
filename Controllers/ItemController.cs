@@ -32,7 +32,7 @@ namespace CyberMall.Controllers
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            var itemListings = await _context.ItemListings.Where(il => il.Seller == currentUser).ToListAsync();
+            var itemListings = await _context.ItemListings.Where(il => il.Seller == currentUser && il.Visible).ToListAsync();
 
             ItemControllerIndexModel model = new ItemControllerIndexModel
             {
@@ -45,7 +45,7 @@ namespace CyberMall.Controllers
         }
 
         // GET: Item/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
             {
@@ -79,6 +79,7 @@ namespace CyberMall.Controllers
         {
             var currentUser = await _userManager.GetUserAsync(User);
             item.Seller = currentUser;
+            item.Visible = true;
             //item.SellerId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get logged-in currentUser's ID
 
             if (ModelState.IsValid)
@@ -104,7 +105,7 @@ namespace CyberMall.Controllers
 
         // GET: Item/Edit/5
         [Authorize]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
             {
@@ -133,7 +134,7 @@ namespace CyberMall.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ItemListing item, IFormFile imageFile)
+        public async Task<IActionResult> Edit(long id, ItemListing item, IFormFile imageFile)
         { 
             if (id != item.Id)
             {
@@ -196,7 +197,7 @@ namespace CyberMall.Controllers
 
         // GET: Item/Delete/5
         [Authorize]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
             {
@@ -239,7 +240,7 @@ namespace CyberMall.Controllers
             {
                 return Forbid(); // Ensure only the owner can delete
             }
-            _context.ItemListings.Remove(item);
+            item.Visible = false;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

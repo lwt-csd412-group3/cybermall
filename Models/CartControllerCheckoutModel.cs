@@ -56,10 +56,7 @@ namespace CyberMall.Models
             ShippingAddressList.Add(
                 new SelectListItem
                 {
-                    Text = address.AddressLine1 + "<br>"
-                        + (address.AddressLine2 ?? "") + "<br>"
-                        + address.City + " " + address.Region + " " + address.Country + "<br>"
-                        + address.ZipCode,
+                    Text = address.ToString(),
                     Value = index.ToString()
                 }
             );

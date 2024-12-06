@@ -31,7 +31,7 @@ namespace CyberMall.Controllers
         // GET: Home
         public async Task<IActionResult> Index()
         {
-            var items = await _context.ItemListings.ToListAsync();  // Fetch all items from the database
+            var items = await _context.ItemListings.Where(il => il.Visible).ToListAsync();  // Fetch all items from the database
             return View(items);  // Pass the items to the view
         }
 
