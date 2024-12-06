@@ -1,0 +1,76 @@
+﻿@model CartControllerCheckoutModel
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h1>Checkout</h1>
+
+<p>Review your items and proceed with the checkout process.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Order.ItemsSold)
+        {
+            <tr>
+                <td>@item.ItemListing.ProductName</td>
+                <td>$@item.Price.ToString("F2")</td>
+                <td>@item.Quantity</td>
+                <td>$@((item.Price * item.Quantity).ToString("F2"))</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form asp-action="ProcessCheckout" method="post">
+<div class="card mt-4">
+    <div class="card-body">
+        <p>Select a shipping address:</p>
+        <select asp-for="SelectedAddressIndex" asp-items="Model.ShippingAddressList">
+        </select>
+
+        <p>Select a payment method:</p>
+
+        <select asp-for="SelectedPaymentIndex" asp-items="Model.PaymentMethodList">
+        </select>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">Order Summary</h5>
+        @{
+            decimal subtotal = Model.Order.SubtotalAmount;
+            decimal tax = Model.Order.TaxAmount;
+            decimal shipping = Model.Order.ShippingCost;
+            decimal total = Model.Order.TotalAmount;
+        }
+        <dl class="row">
+            <dt class="col-sm-3">Subtotal:</dt>
+            <dd class="col-sm-9">$@subtotal.ToString("F2")</dd>
+
+            <dt class="col-sm-3">Tax (10%):</dt>
+            <dd class="col-sm-9">$@tax.ToString("F2")</dd>
+
+            <dt class="col-sm-3">Shipping:</dt>
+            <dd class="col-sm-9">$@shipping.ToString("F2")</dd>
+
+            <dt class="col-sm-3"><strong>Total:</strong></dt>
+            <dd class="col-sm-9"><strong>$@total.ToString("F2")</strong></dd>
+        </dl>
+            <div class="text-right">
+                <a asp-action="ViewCart" class="btn btn-secondary">Back to Cart</a>
+                <button type="submit" class="btn btn-success">Complete Purchase</button>
+            </div>
+        
+    </div>
+</div>
+</form>

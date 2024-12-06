@@ -1,0 +1,64 @@
+﻿@model IEnumerable<CyberMall.Models.ItemSale>
+
+@{
+    ViewData["Title"] = "View Cart";
+}
+
+<h1>Your Cart</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ItemListing.ProductName</td>
+                <td>$@item.Price.ToString("F2")
+                    @if (item.Discount > 0)
+                    {
+                        @:<br>&dash;
+                        @item.Discount.ToString("F2")
+                        @:<br>=
+                        @(item.DiscountedPrice.ToString("F2"))
+
+                    }
+                </td>
+                <td>
+                    <form asp-action="UpdateCart" method="post" style="display: inline;" class="quantity-form">
+                        <input type="number" name="quantities[@item.Id]" value="@item.Quantity" min="1" class="form-control quantity-input" />
+                    </form>
+                </td>
+                <td>$@item.TotalPrice.ToString("F2")</td>
+                <td>
+                    <form asp-action="RemoveFromCart" asp-route-itemListingId="@item.ItemListing.Id" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="CheckoutReview" class="btn btn-primary">Proceed to Checkout</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            input.addEventListener('change', function () {
+                this.closest('form').submit();
+            });
+        });
+    </script>
+}

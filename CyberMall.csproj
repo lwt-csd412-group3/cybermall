@@ -6,11 +6,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20241205043646_uselong-for-ids.cs" />
+    <Compile Remove="Data\Migrations\20241205043646_uselong-for-ids.Designer.cs" />
+    <Compile Remove="Data\Migrations\20241205051351_uselong-for-ids.cs" />
+    <Compile Remove="Data\Migrations\20241205051351_uselong-for-ids.Designer.cs" />
+    <Compile Remove="Data\Migrations\20241205051611_uselong-for-ids.cs" />
+    <Compile Remove="Data\Migrations\20241205051611_uselong-for-ids.Designer.cs" />
+    <Compile Remove="Data\Migrations\20241205051742_uselong-for-ids.cs" />
+    <Compile Remove="Data\Migrations\20241205051742_uselong-for-ids.Designer.cs" />
+    <Compile Remove="Data\Migrations\20241205233326_revise-cart.cs" />
+    <Compile Remove="Data\Migrations\20241205233326_revise-cart.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.32" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.32" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.32" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.32" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.32" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.32" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.32" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
   </ItemGroup>
 
 </Project>

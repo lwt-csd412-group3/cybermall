@@ -1,0 +1,67 @@
+﻿@model CyberMall.Models.ItemControllerIndexModel
+
+@{
+    ViewData["Title"] = "Item";
+}
+
+<h1>Item information</h1>
+
+<p>
+    <a asp-action="Create">Add a new item</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Product name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Picture
+            </th>
+            <th>
+               Price
+            </th>
+            <th>
+                Amount of products available
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.itemListings) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                    @if (item.ImageData != null && item.ImageData.Length > 0)
+                    {
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.ImageData)" alt="Item Image" width="100" />
+                    }
+                    else
+                    {
+                        <span>No image available</span>
+                    }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

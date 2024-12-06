@@ -1,0 +1,81 @@
+﻿@page
+@model CreatePaymentMethodModel
+@{
+    ViewData["Title"] = "Add Payment Method";
+    ViewData["ActivePage"] = ManageNavPages.PaymentMethods;
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="add-card-form" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.NewCardNumber"></label>
+                <input asp-for="Input.NewCardNumber" class="form-control" />
+                <span asp-validation-for="Input.NewCardNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.NewExpirationMonth"></label>
+                <input asp-for="Input.NewExpirationMonth" class="form-control" />
+                <span asp-validation-for="Input.NewExpirationMonth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.NewExpirationYear"></label>
+                <input asp-for="Input.NewExpirationYear" class="form-control" />
+                <span asp-validation-for="Input.NewExpirationYear" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.NewCVC"></label>
+                <input asp-for="Input.NewCVC" class="form-control" />
+                <span asp-validation-for="Input.NewCVC" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.NewFirstName"></label>
+                <input asp-for="Input.NewFirstName" class="form-control" />
+                <span asp-validation-for="Input.NewFirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.NewLastName"></label>
+                <input asp-for="Input.NewLastName" class="form-control" />
+                <span asp-validation-for="Input.NewLastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.NewAddressLine1"></label>
+                <input asp-for="Input.NewAddressLine1" class="form-control" />
+                <span asp-validation-for="Input.NewAddressLine1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.NewAddressLine2"></label>
+                <input asp-for="Input.NewAddressLine2" class="form-control" />
+                <span asp-validation-for="Input.NewAddressLine2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.NewCity"></label>
+                <input asp-for="Input.NewCity" class="form-control" />
+                <span asp-validation-for="Input.NewCity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.NewRegion"></label>
+                <input asp-for="Input.NewRegion" class="form-control" />
+                <span asp-validation-for="Input.NewRegion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.NewCountry"></label>
+                <input asp-for="Input.NewCountry" class="form-control" />
+                <span asp-validation-for="Input.NewCountry" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.NewZipCode"></label>
+                <input asp-for="Input.NewZipCode" class="form-control" />
+                <span asp-validation-for="Input.NewZipCode" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Payment Method</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

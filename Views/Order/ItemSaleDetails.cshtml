@@ -1,0 +1,34 @@
+﻿@model CyberMall.Models.ItemSale
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<h1>Order Details</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h4>Order #@Model.Id</h4>
+        <hr />
+
+        <dl class="row">
+            <dt class="col-sm-3">Unit Price:</dt>
+            <dd class="col-sm-9">$@Model.Price.ToString("F2")</dd>
+
+            <dt class="col-sm-3">Quantity:</dt>
+            <dd class="col-sm-9">@Model.Quantity</dd>
+
+            <dt class="col-sm-3">Discount:</dt>
+            <dd class="col-sm-9">$@Model.Discount.ToString("F2")</dd>
+
+            <dt class="col-sm-3">Total Price:</dt>
+            <dd class="col-sm-9">
+                <strong>$@((Model.Price * Model.Quantity - Model.Discount).ToString("F2"))</strong>
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="OrderHistory" class="btn btn-secondary">Back to Orders</a>
+</div>

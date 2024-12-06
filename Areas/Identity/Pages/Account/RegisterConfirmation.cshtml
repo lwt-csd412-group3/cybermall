@@ -1,0 +1,29 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Register confirmation";
+}
+<h1>@ViewData["Title"]</h1>
+
+<div class="alert alert-info">
+    <h4>Account Created Successfully!</h4>
+    @{
+        if (@Model.DisplayConfirmAccountLink)
+        {
+            <p>
+                In a production environment, a confirmation email would be sent to your address.
+                Since this version doesn't yet have email verification configured, you can confirm your account by clicking the link below:
+            </p>
+            <p class="mt-3">
+                <a id="confirm-link" href="@Model.EmailConfirmationUrl" class="btn btn-primary">Confirm Account</a>
+            </p>
+        }
+        else
+        {
+            <p>
+                Please check your email to confirm your account.
+                A confirmation link has been sent to your email address.
+            </p>
+        }
+    }
+</div>
