@@ -196,11 +196,17 @@ namespace CyberMall.Controllers
             order.PaymentMethod = user.PaymentMethods[model.SelectedPaymentIndex];
 
             if (user.OrderHistory == null) user.OrderHistory = new List<Order>();
+
+
             user.OrderHistory.Add(order);
+
+            await _dbContext.SaveChangesAsync();
+
             user.ItemsInCart = new List<ItemSale>();
 
             await _userManager.UpdateAsync(user);
-            await _dbContext.SaveChangesAsync();
+
+           
             return RedirectToAction("OrderHistory", "Order");
         }
 
